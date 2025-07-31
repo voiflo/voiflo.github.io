@@ -9,6 +9,8 @@ COPY index.html /usr/share/nginx/html/
 COPY example_video.mov /usr/share/nginx/html/
 COPY girl_influencers_studio.png /usr/share/nginx/html/
 COPY flowchart.png /usr/share/nginx/html/
+COPY makeup_teaching.png /usr/share/nginx/html/
+COPY retail_teaching.png /usr/share/nginx/html/
 
 # Create a simple health check endpoint
 RUN echo "healthy" > /usr/share/nginx/html/health

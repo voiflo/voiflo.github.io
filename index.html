@@ -372,103 +372,74 @@
             opacity: 0.9;
         }
 
-        /* Products Section */
+        /* Products Gallery Section */
         .products {
             padding: 100px 0;
             background: #faf9f7;
         }
 
-        .products-grid {
+        .products-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
             margin-top: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .product-card {
             background: white;
-            border-radius: 16px;
-            padding: 2.5rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             transition: all 0.3s ease;
             position: relative;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 340px;
         }
 
         .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
 
-        .product-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .product-preview {
+            position: relative;
             margin-bottom: 1.5rem;
-        }
-
-        .product-icon {
-            font-size: 3rem;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .product-price {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .original-price {
-            background: #ccc;
-            color: #666;
-            padding: 0.3rem 0.8rem;
             border-radius: 15px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: line-through;
-            opacity: 0.7;
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
-        .flash-sale-price {
-            background: linear-gradient(45deg, #00c851, #007e33);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            font-weight: 700;
-            font-size: 1.4rem;
-            box-shadow: 0 4px 15px rgba(0, 200, 81, 0.3);
-        }
-
-        .flash-sale-badge {
-            background: linear-gradient(45deg, #ff6b6b, #ff4757);
-            color: white;
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .product-preview img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            display: block;
         }
 
         .product-title {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             color: #333;
+            line-height: 1.3;
         }
 
         .product-description {
-            color: #666;
+            color: #555;
             margin-bottom: 1.5rem;
-            line-height: 1.6;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .product-action {
+            margin-top: auto;
         }
 
         .product-features {
@@ -507,26 +478,23 @@
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
-        .get-free-btn {
-            background: linear-gradient(135deg, #00c851, #007e33);
+        .gallery-btn {
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
             color: white;
             border: none;
-            padding: 16px 32px;
-            border-radius: 12px;
+            padding: 12px 24px;
+            border-radius: 25px;
             cursor: pointer;
-            font-weight: 700;
-            font-size: 1.1rem;
+            font-weight: 600;
+            font-size: 1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(0, 200, 81, 0.4);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            animation: pulse 3s infinite;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+            width: 100%;
         }
 
-        .get-free-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 200, 81, 0.5);
-            animation: none;
+        .gallery-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
         }
 
         .product-details {
@@ -991,7 +959,7 @@
                 grid-template-columns: 1fr;
             }
 
-            .products-grid {
+            .products-gallery {
                 grid-template-columns: 1fr;
             }
 
@@ -1128,95 +1096,35 @@
         </div>
     </section>
 
-    <!-- Products Section -->
+    <!-- Products Gallery Section -->
     <section id="products" class="products">
         <div class="container">
-            <h2 class="section-title">Digital Training Scripts & Educational Materials</h2>
-            <p style="text-align: center; font-size: 1.2rem; margin-bottom: 2rem;">Get instant FREE access to professional scripts, ready-to-use templates, and step-by-step guides for content creators. Plus, join our network and get contacted directly by merchants with collaboration and brand partnership opportunities!</p>
+            <h2 class="section-title">Training Materials</h2>
+            <p style="text-align: center; font-size: 1.1rem; margin-bottom: 2rem; color: #666;">Professional training scripts and templates for content creators</p>
             
-            <div class="products-grid">
-                <!-- Clothing Category -->
+            <div class="products-gallery">
+                <!-- Makeup Training -->
                 <div class="product-card">
-                    <div class="product-header">
-                        <i class="fas fa-tshirt product-icon"></i>
-                        <div class="product-price">
-                            <span class="original-price">$10.99</span>
-                            <span class="flash-sale-price">FREE</span>
-                            <div class="flash-sale-badge">⚡ Flash Sale - Limited Time!</div>
-                        </div>
+                    <div class="product-preview">
+                        <img src="./makeup_teaching.png" alt="Makeup Training Preview">
                     </div>
-                    <h3 class="product-title">Fashion & Clothing Influencer Scripts</h3>
-                    <p class="product-description">Complete collection of proven scripts and ready-to-copy templates specifically designed for fashion content creators, clothing hauls, and style influencers. Download instantly + get added to our exclusive list for free clothing collaborations with top merchants!</p>
-                    
-                    
-                    <!-- Product Image Carousel -->
-                    <div class="product-carousel">
-                        <div class="carousel-container">
-                            <div class="carousel-track" id="clothing-carousel-track">
-                                <div class="carousel-slide">
-                                    <img src="https://via.placeholder.com/400x300/667eea/ffffff?text=Fashion+Scripts+Preview" alt="Fashion Scripts Preview">
-                                </div>
-                                <div class="carousel-slide">
-                                    <img src="https://via.placeholder.com/400x300/764ba2/ffffff?text=Live+Streaming+Templates" alt="Live Streaming Templates">
-                                </div>
-                                <div class="carousel-slide">
-                                    <img src="https://via.placeholder.com/400x300/ff6b6b/ffffff?text=Content+Calendar" alt="Content Calendar">
-                                </div>
-                            </div>
-                            <button class="carousel-nav carousel-prev" onclick="prevSlide('clothing')">‹</button>
-                            <button class="carousel-nav carousel-next" onclick="nextSlide('clothing')">›</button>
-                            <div class="carousel-indicators">
-                                <div class="carousel-dot active" onclick="goToSlide('clothing', 0)"></div>
-                                <div class="carousel-dot" onclick="goToSlide('clothing', 1)"></div>
-                                <div class="carousel-dot" onclick="goToSlide('clothing', 2)"></div>
-                            </div>
-                        </div>
+                    <h3 class="product-title">Beauty & Makeup Training</h3>
+                    <p class="product-description">Professional scripts and templates for beauty content creators and makeup tutorials.</p>
+                    <div class="product-action">
+                        <button class="gallery-btn" onclick="openApplicationForm('Beauty & Makeup Training Guide')">Get Training Materials</button>
                     </div>
-                    
-
-                    <button class="get-free-btn" onclick="openApplicationForm('Fashion & Clothing Training Guide')">Get Free Scripts + Brand Collabs!</button>
                 </div>
 
-                <!-- Makeup Category -->
+                <!-- Retail Training -->
                 <div class="product-card">
-                    <div class="product-header">
-                        <i class="fas fa-palette product-icon"></i>
-                        <div class="product-price">
-                            <span class="original-price">$10.99</span>
-                            <span class="flash-sale-price">FREE</span>
-                            <div class="flash-sale-badge">⚡ Flash Sale - Limited Time!</div>
-                        </div>
+                    <div class="product-preview">
+                        <img src="./retail_teaching.png" alt="Retail Training Preview">
                     </div>
-                    <h3 class="product-title">Beauty & Makeup Influencer Scripts</h3>
-                    <p class="product-description">Comprehensive collection of copy-ready scripts for beauty content creators, makeup tutorials, and cosmetic product reviewers. Download instantly + get connected with beauty brands offering free products for collaborations!</p>
-                    
-                    
-                    <!-- Product Image Carousel -->
-                    <div class="product-carousel">
-                        <div class="carousel-container">
-                            <div class="carousel-track" id="makeup-carousel-track">
-                                <div class="carousel-slide">
-                                    <img src="https://via.placeholder.com/400x300/764ba2/ffffff?text=Beauty+Scripts+Preview" alt="Beauty Scripts Preview">
-                                </div>
-                                <div class="carousel-slide">
-                                    <img src="https://via.placeholder.com/400x300/667eea/ffffff?text=Makeup+Tutorials" alt="Makeup Tutorials">
-                                </div>
-                                <div class="carousel-slide">
-                                    <img src="https://via.placeholder.com/400x300/ffd93d/ffffff?text=Skincare+Guides" alt="Skincare Guides">
-                                </div>
-                            </div>
-                            <button class="carousel-nav carousel-prev" onclick="prevSlide('makeup')">‹</button>
-                            <button class="carousel-nav carousel-next" onclick="nextSlide('makeup')">›</button>
-                            <div class="carousel-indicators">
-                                <div class="carousel-dot active" onclick="goToSlide('makeup', 0)"></div>
-                                <div class="carousel-dot" onclick="goToSlide('makeup', 1)"></div>
-                                <div class="carousel-dot" onclick="goToSlide('makeup', 2)"></div>
-                            </div>
-                        </div>
+                    <h3 class="product-title">Retail & Sales Training</h3>
+                    <p class="product-description">Professional scripts and templates for retail content creators and sales presentations.</p>
+                    <div class="product-action">
+                        <button class="gallery-btn" onclick="openApplicationForm('Retail & Sales Training Guide')">Get Training Materials</button>
                     </div>
-                    
-
-                    <button class="get-free-btn" onclick="openApplicationForm('Beauty & Makeup Training Guide')">Get Free Scripts + Brand Collabs!</button>
                 </div>
             </div>
         </div>
