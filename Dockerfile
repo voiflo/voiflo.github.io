@@ -104,7 +104,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 EXPOSE 8080
 
 # Labels for metadata
-LABEL maintainer="Christine Yi <christineyi12345@gmail.com>" \
+LABEL maintainer="Voiflo <voiflo.community@gmail.com>" \
       version="1.0.0" \
       description="Premium landing page for digital influencer training"
 

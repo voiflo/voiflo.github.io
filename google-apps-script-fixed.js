@@ -72,7 +72,7 @@ function doPost(e) {
 This application was submitted through Elite Influencer Community website.`;
 
       MailApp.sendEmail({
-        to: 'christineyi12345@gmail.com',
+        to: 'voiflo.community@gmail.com',
         subject: `🎯 New Application: ${data.product}`,
         body: emailBody
       });
@@ -84,7 +84,7 @@ This application was submitted through Elite Influencer Community website.`;
       
       // Send email with error info
       MailApp.sendEmail({
-        to: 'christineyi12345@gmail.com',
+        to: 'voiflo.community@gmail.com',
         subject: '🚨 Application Received (Sheet Error)',
         body: `An application was received but couldn't be saved to sheet:
 
@@ -112,7 +112,7 @@ Sheet ID used: ${SHEET_ID}`
     // Send error notification email
     try {
       MailApp.sendEmail({
-        to: 'christineyi12345@gmail.com',
+        to: 'voiflo.community@gmail.com',
         subject: '🚨 Form Submission Error',
         body: `Form submission failed:
 
@@ -198,7 +198,7 @@ function testSheetAndEmail() {
     // Test email
     console.log('Testing email...');
     MailApp.sendEmail({
-      to: 'christineyi12345@gmail.com',
+      to: 'voiflo.community@gmail.com',
       subject: '✅ Test Email - Google Apps Script Working',
       body: `This is a test email to confirm your Google Apps Script is working correctly.
 
@@ -221,7 +221,7 @@ Timestamp: ${new Date().toISOString()}`
     // Try to send error email
     try {
       MailApp.sendEmail({
-        to: 'christineyi12345@gmail.com',
+        to: 'voiflo.community@gmail.com',
         subject: '❌ Google Apps Script Test Failed',
         body: `Your Google Apps Script test failed:
 

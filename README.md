@@ -13,7 +13,7 @@ A premium landing page for digital influencer training programs targeting conten
 ## 📁 Project Structure
 
 ```
-christineyi12345/
+voiflo/
 ├── index.html          # Main landing page
 ├── package.json        # Node.js dependencies and scripts
 ├── server.js           # Local development server
@@ -69,14 +69,14 @@ chmod +x run-docker.sh
 **Manual Docker commands**:
 ```bash
 # Build the image
-docker build -t christine-landing .
+docker build -t voiflo-landing .
 
 # Run the container
-docker run -d --name christine-landing-app -p 8080:8080 christine-landing
+docker run -d --name voiflo-landing-app -p 8080:8080 voiflo-landing
 
 # Stop and remove
-docker stop christine-landing-app
-docker rm christine-landing-app
+docker stop voiflo-landing-app
+docker rm voiflo-landing-app
 ```
 
 Open your browser and navigate to `http://localhost:8080`
@@ -94,7 +94,7 @@ Open your browser and navigate to `http://localhost:8080`
 
 2. **Your site will be available at**:
    ```
-   https://[your-username].github.io/christineyi12345
+   https://voiflo.github.io
    ```
 
 ### AWS ECS Fargate (Production Ready)
@@ -110,7 +110,7 @@ Deploy your Docker container to AWS ECS Fargate for scalable production hosting.
 
 1. **Create ECR Repository**:
    ```bash
-   aws ecr create-repository --repository-name christine-landing
+   aws ecr create-repository --repository-name voiflo-landing
    ```
 
 2. **Build and Push Docker Image**:
@@ -119,11 +119,11 @@ Deploy your Docker container to AWS ECS Fargate for scalable production hosting.
    aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin [your-account-id].dkr.ecr.us-east-1.amazonaws.com
    
    # Build and tag image
-   docker build -t christine-landing .
-   docker tag christine-landing:latest [your-account-id].dkr.ecr.us-east-1.amazonaws.com/christine-landing:latest
+   docker build -t voiflo-landing .
+   docker tag voiflo-landing:latest [your-account-id].dkr.ecr.us-east-1.amazonaws.com/voiflo-landing:latest
    
    # Push to ECR
-   docker push [your-account-id].dkr.ecr.us-east-1.amazonaws.com/christine-landing:latest
+   docker push [your-account-id].dkr.ecr.us-east-1.amazonaws.com/voiflo-landing:latest
    ```
 
 3. **Create ECS Task Definition**:
@@ -171,7 +171,7 @@ NODE_ENV=production
    - Add corresponding JavaScript functions for expand/collapse
 
 2. **Updating Contact Information**:
-   - Search for `christineyi12345@gmail.com` in `index.html`
+   - Search for `voiflo.community@gmail.com` in `index.html`
    - Replace with your email address
 
 3. **Modifying Testimonials**:
@@ -192,10 +192,10 @@ docker-compose down
 ### Production Build
 ```bash
 # Build production image
-docker build -t christine-landing:prod .
+docker build -t voiflo-landing:prod .
 
 # Run production container
-docker run -p 8080:8080 christine-landing:prod
+docker run -p 8080:8080 voiflo-landing:prod
 ```
 
 ## 📊 Performance Optimization
@@ -230,7 +230,7 @@ The site is optimized for:
 ## 📞 Support
 
 For questions or support:
-- **Email**: christineyi12345@gmail.com
+- **Email**: voiflo.community@gmail.com
 - **Issues**: Create a GitHub issue
 
 ## 📄 License
@@ -244,7 +244,7 @@ This project is proprietary and confidential. All rights reserved.
 ```bash
 # Clone and setup
 git clone [your-repo-url]
-cd christineyi12345
+cd voiflo
 
 # Local development (choose one)
 npm start                    # Node.js server

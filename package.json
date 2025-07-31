@@ -1,7 +1,7 @@
 {
-  "name": "christine-yi-landing",
+  "name": "voiflo-landing",
   "version": "1.0.0",
-  "description": "Premium landing page for Christine Yi's digital influencer training programs",
+  "description": "Premium landing page for Voiflo's digital influencer training programs",
   "main": "index.html",
   "scripts": {
     "start": "node server.js",
@@ -9,8 +9,8 @@
     "serve": "node server.js",
     "build": "echo 'Static site - no build needed'",
     "test": "echo 'No tests yet'",
-    "docker:build": "docker build -t christine-landing .",
-    "docker:run": "docker run -p 8080:80 christine-landing",
+    "docker:build": "docker build -t voiflo-landing .",
+    "docker:run": "docker run -p 8080:80 voiflo-landing",
     "docker:dev": "./run-docker.sh",
     "docker:stop": "./run-docker.sh stop",
     "docker:logs": "./run-docker.sh logs"
@@ -25,14 +25,14 @@
     "beauty",
     "content-creator"
   ],
-  "author": "Christine Yi <christineyi12345@gmail.com>",
+  "author": "Voiflo <voiflo.community@gmail.com>",
   "license": "UNLICENSED",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/[your-username]/christineyi12345.git"
+    "url": "https://github.com/voiflo/voiflo.git"
   },
-  "homepage": "https://[your-username].github.io/christineyi12345",
+  "homepage": "https://voiflo.github.io/voiflo",
   "dependencies": {
     "express": "^4.18.2",
     "serve-static": "^1.15.0"

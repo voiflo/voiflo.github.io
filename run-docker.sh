@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Christine Yi Landing Page - Docker Launch Script
+# Voiflo Landing Page - Docker Launch Script
 # This script builds and runs the Docker container for local testing
 
 set -e
 
-echo "🚀 Christine Yi Landing Page - Docker Setup"
+echo "🚀 Voiflo Landing Page - Docker Setup"
 echo "============================================"
 
 # Colors for output
@@ -16,8 +16,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-IMAGE_NAME="christine-landing"
-CONTAINER_NAME="christine-landing-app"
+IMAGE_NAME="voiflo-landing"
+CONTAINER_NAME="voiflo-landing-app"
 HOST_PORT=8080
 CONTAINER_PORT=8080
 
