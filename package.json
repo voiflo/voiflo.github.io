@@ -1,0 +1,52 @@
+{
+  "name": "christine-yi-landing",
+  "version": "1.0.0",
+  "description": "Premium landing page for Christine Yi's digital influencer training programs",
+  "main": "index.html",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "serve": "node server.js",
+    "build": "echo 'Static site - no build needed'",
+    "test": "echo 'No tests yet'",
+    "docker:build": "docker build -t christine-landing .",
+    "docker:run": "docker run -p 8080:80 christine-landing",
+    "docker:dev": "./run-docker.sh",
+    "docker:stop": "./run-docker.sh stop",
+    "docker:logs": "./run-docker.sh logs"
+  },
+  "keywords": [
+    "landing-page",
+    "influencer",
+    "training",
+    "e-commerce",
+    "affiliate-marketing",
+    "fashion",
+    "beauty",
+    "content-creator"
+  ],
+  "author": "Christine Yi <christineyi12345@gmail.com>",
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/[your-username]/christineyi12345.git"
+  },
+  "homepage": "https://[your-username].github.io/christineyi12345",
+  "dependencies": {
+    "express": "^4.18.2",
+    "serve-static": "^1.15.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
