@@ -411,16 +411,30 @@
             position: relative;
             margin-bottom: 1.5rem;
             border-radius: 15px;
-            overflow: hidden;
+            overflow: visible;
             flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .product-preview img {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
+            height: auto;
+            max-height: 300px;
+            object-fit: contain;
             border-radius: 15px;
             display: block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-preview:hover img {
+            transform: scale(1.1);
+            max-height: none;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         .product-title {
@@ -1103,29 +1117,18 @@
             <p style="text-align: center; font-size: 1.1rem; margin-bottom: 2rem; color: #666;">Professional training scripts and templates for content creators</p>
             
             <div class="products-gallery">
-                <!-- Makeup Training -->
+                <!-- Ecommerce Training -->
                 <div class="product-card">
                     <div class="product-preview">
-                        <img src="./makeup_teaching.png" alt="Makeup Training Preview">
+                        <img src="./ecommerce_teaching.png" alt="Ecommerce Training Preview">
                     </div>
-                    <h3 class="product-title">Beauty & Makeup Training</h3>
-                    <p class="product-description">Professional scripts and templates for beauty content creators and makeup tutorials.</p>
+                    <h3 class="product-title">Ecommerce Livestreaming Training</h3>
+                    <p class="product-description">A mastery textbook teaching how to master ecommerce livestreaming sales with proven scripts and techniques.</p>
                     <div class="product-action">
-                        <button class="gallery-btn" onclick="openApplicationForm('Beauty & Makeup Training Guide')">Get Training Materials</button>
+                        <button class="gallery-btn" onclick="openApplicationForm('Ecommerce Livestreaming Training Guide')">Get Training Materials</button>
                     </div>
                 </div>
 
-                <!-- Retail Training -->
-                <div class="product-card">
-                    <div class="product-preview">
-                        <img src="./retail_teaching.png" alt="Retail Training Preview">
-                    </div>
-                    <h3 class="product-title">Retail & Sales Training</h3>
-                    <p class="product-description">Professional scripts and templates for retail content creators and sales presentations.</p>
-                    <div class="product-action">
-                        <button class="gallery-btn" onclick="openApplicationForm('Retail & Sales Training Guide')">Get Training Materials</button>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
