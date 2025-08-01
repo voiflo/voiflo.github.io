@@ -51,6 +51,9 @@ case $COMMAND in
         echo "  run   - Build and run container (default)"
         echo "  stop  - Stop and remove container"
         echo "  logs  - Show container logs"
+        echo ""
+        echo "💡 To change deployment mode (demo/sandbox/production):"
+        echo "   Edit DEPLOYMENT_MODE in index.html before running"
         exit 1
         ;;
 esac
@@ -68,6 +71,32 @@ cleanup() {
     echo -e "${YELLOW}🧹 Cleaning up existing containers...${NC}"
     docker stop $CONTAINER_NAME > /dev/null 2>&1 || true
     docker rm $CONTAINER_NAME > /dev/null 2>&1 || true
+}
+
+# Function to check current deployment mode
+check_deployment_mode() {
+    if [ -f "index.html" ]; then
+        CURRENT_MODE=$(grep "const DEPLOYMENT_MODE = " index.html | sed "s/.*const DEPLOYMENT_MODE = '\([^']*\)'.*/\1/")
+        echo -e "${BLUE}📋 Current deployment mode: ${GREEN}$CURRENT_MODE${NC}"
+        
+        case $CURRENT_MODE in
+            "demo")
+                echo -e "${GREEN}   🎁 Demo mode - Users get free access${NC}"
+                ;;
+            "sandbox") 
+                echo -e "${YELLOW}   🧪 Sandbox mode - PayPal testing${NC}"
+                ;;
+            "production")
+                echo -e "${RED}   🚨 Production mode - Live payments${NC}"
+                ;;
+            *)
+                echo -e "${RED}   ❌ Unknown mode: $CURRENT_MODE${NC}"
+                ;;
+        esac
+    else
+        echo -e "${RED}❌ index.html not found${NC}"
+        exit 1
+    fi
 }
 
 # Function to build the Docker image
@@ -131,9 +160,8 @@ show_status() {
     echo
     echo "💡 Useful Commands:"
     echo "   View logs:     docker logs $CONTAINER_NAME"
-    echo "   Stop app:      docker stop $CONTAINER_NAME"
-    echo "   Remove app:    docker rm $CONTAINER_NAME"
-    echo "   Restart app:   docker restart $CONTAINER_NAME"
+    echo "   Stop app:      ./run-docker.sh stop"
+    echo "   Change mode:   Edit DEPLOYMENT_MODE in index.html"
     echo
     echo -e "${YELLOW}Press Ctrl+C to stop the application${NC}"
 }
@@ -156,6 +184,9 @@ open_browser() {
 main() {
     echo -e "${BLUE}Checking Docker...${NC}"
     check_docker
+    
+    echo -e "${BLUE}Checking deployment configuration...${NC}"
+    check_deployment_mode
     
     cleanup
     build_image
