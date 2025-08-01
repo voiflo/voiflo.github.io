@@ -209,6 +209,7 @@
             width: 100%;
             height: auto;
             display: block;
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
         }
 
         /* Hero Section */
@@ -220,7 +221,7 @@
             text-align: center;
             position: relative;
             background: #faf9f7;
-            padding: 80px 0 80px;
+            padding: 120px 0 80px;
         }
 
         .hero-content {
@@ -634,54 +635,58 @@
             margin: 3rem auto 0;
             overflow: hidden;
             border-radius: 20px;
+            touch-action: pan-y pinch-zoom;
         }
 
         .testimonials-track {
             display: flex;
-            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+            width: 500%; /* 5 testimonials * 100% */
         }
 
         .testimonial-card {
-            min-width: 100%;
+            width: 20%; /* 100% / 5 testimonials */
+            flex-shrink: 0;
             padding: 3rem 2rem;
             background: white;
             text-align: center;
             position: relative;
             box-shadow: 0 25px 50px rgba(0,0,0,0.05);
+            box-sizing: border-box;
         }
 
-
         .testimonial-avatar {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            margin: 0 auto 2rem;
-            border: 4px solid #667eea;
+            margin: 0 auto 1.5rem;
+            border: 3px solid #667eea;
             object-fit: cover;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
         }
 
         .testimonial-text {
-            font-size: 1.3rem;
-            line-height: 1.8;
-            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
             color: #444;
             font-weight: 400;
-            max-width: 700px;
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
         }
 
         .testimonial-author {
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #333;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
         }
 
         .testimonial-role {
             color: #667eea;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
         }
 
@@ -690,30 +695,30 @@
             justify-content: center;
             align-items: center;
             gap: 1rem;
-            margin-top: 3rem;
+            margin-top: 2rem;
         }
 
         .carousel-btn {
             background: white;
             color: #667eea;
             border: 2px solid #667eea;
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.1);
         }
 
         .carousel-btn:hover {
             background: #667eea;
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 12px 25px rgba(102, 126, 234, 0.2);
         }
 
         .testimonial-indicators {
@@ -724,8 +729,8 @@
         }
 
         .testimonial-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: rgba(102, 126, 234, 0.3);
             cursor: pointer;
@@ -734,7 +739,22 @@
 
         .testimonial-dot.active {
             background: #667eea;
-            transform: scale(1.2);
+            transform: scale(1.3);
+        }
+
+        /* Touch/Swipe indicators for mobile */
+        .swipe-hint {
+            display: none;
+            text-align: center;
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            animation: fadeInOut 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
 
         /* Contact Section */
@@ -942,6 +962,9 @@
                 display: none;
             }
 
+            .hero {
+                padding: 140px 0 80px;
+            }
 
             .showcase-content {
                 grid-template-columns: 1fr;
@@ -977,8 +1000,49 @@
                 grid-template-columns: 1fr;
             }
 
+            .testimonials-carousel {
+                margin: 2rem auto 0;
+                overflow: hidden;
+            }
+
+            .testimonials-track {
+                display: flex;
+                transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                width: 500%; /* 5 testimonials * 100% */
+            }
+
             .testimonial-card {
-                min-width: 300px;
+                width: 20%; /* 100% / 5 testimonials = exactly one testimonial per view */
+                flex-shrink: 0;
+                padding: 2rem 1.5rem;
+                box-sizing: border-box;
+            }
+
+            .testimonial-text {
+                font-size: 1rem;
+                line-height: 1.6;
+                margin-bottom: 1.2rem;
+            }
+
+            .testimonial-avatar {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 1rem;
+            }
+
+            .carousel-controls {
+                gap: 0.5rem;
+                margin-top: 1.5rem;
+            }
+
+            .carousel-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+
+            .swipe-hint {
+                display: block;
             }
 
             .container {
@@ -987,6 +1051,10 @@
         }
 
         @media (max-width: 480px) {
+            .hero {
+                padding: 160px 0 80px;
+            }
+
             .hero h1 {
                 font-size: 2rem;
             }
@@ -1187,6 +1255,7 @@
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
+            <div class="swipe-hint">← Swipe to see more success stories →</div>
         </div>
     </section>
 
@@ -1401,38 +1470,149 @@ Timestamp: ${data.timestamp}`;
             closeApplicationModal();
         }
 
-        // Modern Testimonials Carousel
+        // Modern Testimonials Carousel with Touch Support
         let currentTestimonial = 0;
         const totalTestimonials = 5;
+        let isTransitioning = false;
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let autoRotateInterval;
 
         function updateTestimonialsCarousel() {
             const track = document.getElementById('testimonialsTrack');
             const dots = document.querySelectorAll('.testimonial-dot');
             
-            track.style.transform = `translateX(-${currentTestimonial * 100}%)`;
+            if (!track) return;
+            
+            // Each testimonial is 20% of the track width, so move by 20% increments
+            track.style.transform = `translateX(-${currentTestimonial * 20}%)`;
             
             dots.forEach((dot, index) => {
                 dot.classList.toggle('active', index === currentTestimonial);
             });
+            
+            isTransitioning = true;
+            setTimeout(() => {
+                isTransitioning = false;
+            }, 400);
         }
 
         function nextTestimonial() {
+            if (isTransitioning) return;
             currentTestimonial = (currentTestimonial + 1) % totalTestimonials;
             updateTestimonialsCarousel();
         }
 
         function previousTestimonial() {
+            if (isTransitioning) return;
             currentTestimonial = currentTestimonial === 0 ? totalTestimonials - 1 : currentTestimonial - 1;
             updateTestimonialsCarousel();
         }
 
         function goToTestimonial(index) {
+            if (isTransitioning) return;
             currentTestimonial = index;
             updateTestimonialsCarousel();
         }
 
-        // Auto-rotate testimonials
-        setInterval(nextTestimonial, 6000);
+        // Touch/Swipe support
+        function handleTouchStart(e) {
+            touchStartX = e.touches[0].clientX;
+            stopAutoRotate();
+        }
+
+        function handleTouchMove(e) {
+            // Prevent scrolling while swiping horizontally
+            if (Math.abs(e.touches[0].clientX - touchStartX) > 10) {
+                e.preventDefault();
+            }
+        }
+
+        function handleTouchEnd(e) {
+            touchEndX = e.changedTouches[0].clientX;
+            handleSwipe();
+            startAutoRotate();
+        }
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const swipeDistance = touchStartX - touchEndX;
+            
+            if (Math.abs(swipeDistance) > swipeThreshold) {
+                if (swipeDistance > 0) {
+                    nextTestimonial();
+                } else {
+                    previousTestimonial();
+                }
+            }
+        }
+
+        function startAutoRotate() {
+            stopAutoRotate();
+            autoRotateInterval = setInterval(nextTestimonial, 6000);
+        }
+
+        function stopAutoRotate() {
+            if (autoRotateInterval) {
+                clearInterval(autoRotateInterval);
+                autoRotateInterval = null;
+            }
+        }
+
+        // Initialize touch events
+        function initTestimonialsCarousel() {
+            const carousel = document.querySelector('.testimonials-carousel');
+            if (carousel) {
+                carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
+                carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
+                carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
+                
+                // Mouse events for desktop
+                let isMouseDown = false;
+                let mouseStartX = 0;
+                
+                carousel.addEventListener('mousedown', (e) => {
+                    isMouseDown = true;
+                    mouseStartX = e.clientX;
+                    stopAutoRotate();
+                    e.preventDefault();
+                });
+                
+                carousel.addEventListener('mousemove', (e) => {
+                    if (!isMouseDown) return;
+                    e.preventDefault();
+                });
+                
+                carousel.addEventListener('mouseup', (e) => {
+                    if (!isMouseDown) return;
+                    isMouseDown = false;
+                    
+                    const mouseEndX = e.clientX;
+                    const swipeDistance = mouseStartX - mouseEndX;
+                    const swipeThreshold = 50;
+                    
+                    if (Math.abs(swipeDistance) > swipeThreshold) {
+                        if (swipeDistance > 0) {
+                            nextTestimonial();
+                        } else {
+                            previousTestimonial();
+                        }
+                    }
+                    
+                    startAutoRotate();
+                });
+                
+                carousel.addEventListener('mouseleave', () => {
+                    if (isMouseDown) {
+                        isMouseDown = false;
+                        startAutoRotate();
+                    }
+                });
+            }
+        }
+
+        // Start auto-rotate and initialize
+        startAutoRotate();
 
         // Close modal when clicking outside
         window.onclick = function(event) {
@@ -1454,13 +1634,23 @@ Timestamp: ${data.timestamp}`;
             }
         });
 
-        // Initialize carousel on load
+        // Initialize carousels on load
         window.addEventListener('load', function() {
             setTimeout(updateCarousel, 100);
+            initTestimonialsCarousel();
         });
 
         // Handle window resize for carousel
         window.addEventListener('resize', updateCarousel);
+
+        // Pause auto-rotation when page is not visible
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                stopAutoRotate();
+            } else {
+                startAutoRotate();
+            }
+        });
     </script>
 </body>
 </html>
