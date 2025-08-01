@@ -1636,12 +1636,12 @@
                 userMessage: 'Free for a limited time! Click "Get Free Access" - no credit card required.'
             },
             sandbox: {
-                clientId: 'sb-test-client-id', // Replace with your sandbox client ID
+                clientId: 'YOUR_SANDBOX_CLIENT_ID_HERE', // Will be replaced by GitHub Actions with secret
                 description: 'PayPal Sandbox Testing',
-                userMessage: 'Testing mode - Use PayPal sandbox accounts'
+                userMessage: 'Testing mode - Use PayPal sandbox accounts or test credit card numbers'
             },
             production: {
-                clientId: 'YOUR_PAYPAL_CLIENT_ID', // Replace with your production client ID
+                clientId: 'YOUR_PAYPAL_CLIENT_ID', // Will be replaced by GitHub Actions with secret
                 description: 'Live PayPal Payments',
                 userMessage: 'Secure payment processing by PayPal'
             }
