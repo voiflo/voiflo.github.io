@@ -1294,6 +1294,11 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="niche">Content Niche (optional)</label>
+                    <input type="text" id="niche" name="niche" placeholder="e.g. beauty, travel, fashion, lifestyle">
+                </div>
+                
+                <div class="form-group">
                     <label for="instagram">Instagram URL (optional)</label>
                     <input type="url" id="instagram" name="instagram" placeholder="https://instagram.com/your_profile">
                 </div>
@@ -1408,6 +1413,7 @@
                 product: selectedProduct,
                 username: formData.get('username'),
                 email: formData.get('email'),
+                niche: formData.get('niche') || 'Not provided',
                 instagram: formData.get('instagram') || 'Not provided',
                 tiktok: formData.get('tiktok') || 'Not provided',
                 youtube: formData.get('youtube') || 'Not provided',
@@ -1421,7 +1427,7 @@
 
             try {
                 // Send to Google Apps Script Web App
-                const response = await fetch('https://script.google.com/macros/s/AKfycbzntlcg0pIMWq-XuVa8xJplPc5n8ym6ew7OPE7axP-TuFuMqTW8MoxCB4sEqq6sb7kr/exec', {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbyn7WTlyAyGBI6k4rV8oHPASIERUvVahoxAb-wmgtF94ecJu6_u4nywww0gKIItaOY8/exec', {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: {
@@ -1455,6 +1461,7 @@
 Product: ${data.product}
 Username: ${data.username}
 Email: ${data.email}
+Niche: ${data.niche}
 Instagram: ${data.instagram}
 TikTok: ${data.tiktok}
 YouTube: ${data.youtube}

@@ -30,8 +30,8 @@ function doPost(e) {
       
       // Add headers if first row is empty
       if (sheet.getLastRow() === 0) {
-        sheet.getRange(1, 1, 1, 10).setValues([[
-          'Timestamp', 'Product', 'Username', 'Email', 'Instagram', 
+        sheet.getRange(1, 1, 1, 11).setValues([[
+          'Timestamp', 'Product', 'Username', 'Email', 'Niche', 'Instagram', 
           'TikTok', 'YouTube', 'WhatsApp', 'Video Price', 'Free Shoot'
         ]]);
         console.log('Added headers to sheet');
@@ -43,6 +43,7 @@ function doPost(e) {
         data.product || 'Unknown',
         data.username || 'Not provided',
         data.email || 'Not provided',
+        data.niche || 'Not provided',
         data.instagram || 'Not provided',
         data.tiktok || 'Not provided',
         data.youtube || 'Not provided',
@@ -60,6 +61,7 @@ function doPost(e) {
 🎯 Product: ${data.product}
 👤 Username: ${data.username}
 📧 Email: ${data.email}
+🎨 Niche: ${data.niche}
 📱 Instagram: ${data.instagram}
 🎵 TikTok: ${data.tiktok}
 📺 YouTube: ${data.youtube}
@@ -146,6 +148,7 @@ function testSheetAndEmail() {
       product: 'Test Product - Manual Test',
       username: 'test_user_manual',
       email: 'test@example.com',
+      niche: 'beauty, travel',
       instagram: 'https://instagram.com/test',
       tiktok: 'Not provided',
       youtube: 'Not provided', 
@@ -171,8 +174,8 @@ function testSheetAndEmail() {
     
     // Add headers if needed
     if (sheet.getLastRow() === 0) {
-      sheet.getRange(1, 1, 1, 10).setValues([[
-        'Timestamp', 'Product', 'Username', 'Email', 'Instagram', 
+      sheet.getRange(1, 1, 1, 11).setValues([[
+        'Timestamp', 'Product', 'Username', 'Email', 'Niche', 'Instagram', 
         'TikTok', 'YouTube', 'WhatsApp', 'Video Price', 'Free Shoot'
       ]]);
       console.log('✅ Headers added');
@@ -184,6 +187,7 @@ function testSheetAndEmail() {
       testData.product,
       testData.username,
       testData.email,
+      testData.niche,
       testData.instagram,
       testData.tiktok,
       testData.youtube,
