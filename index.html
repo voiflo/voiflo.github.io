@@ -1416,12 +1416,12 @@
                     <h3 class="product-title">Ecommerce Livestreaming Training</h3>
                     <p class="product-description">A mastery textbook teaching how to master ecommerce livestreaming sales with proven scripts and techniques.</p>
                     <div class="product-price" id="productPricing">
-                        <span style="text-decoration: line-through; opacity: 0.6; font-size: 1.2rem; font-weight: 600;">$4.99</span>
+                        <span style="text-decoration: line-through; opacity: 0.6; font-size: 1.2rem; font-weight: 600;">$1.99</span>
                         <span style="color: #00c851; margin-left: 0.5rem; font-size: 1.5rem; font-weight: bold;">FREE</span>
                         <div class="price-note" style="color: #00c851; font-weight: 600;">Limited time free • No payment required</div>
                     </div>
                     <div class="product-action">
-                        <button class="gallery-btn" id="productButton" onclick="openApplicationForm('Ecommerce Livestreaming Training Guide', 4.99)">Get Free Access</button>
+                        <button class="gallery-btn" id="productButton" onclick="openApplicationForm('Ecommerce Livestreaming Training Guide', 1.99)">Get Free Access</button>
                     </div>
                 </div>
 
@@ -1511,7 +1511,7 @@
             <div id="paymentSection" class="payment-section">
                 <h4>Secure Payment</h4>
                 <div class="price-display">
-                    <div class="price-amount" id="displayPrice">$4.99</div>
+                    <div class="price-amount" id="displayPrice">$1.99</div>
                     <div class="price-description">One-time payment • Instant access to training materials</div>
                 </div>
                 <div id="paypal-button-container" class="paypal-button-container"></div>
@@ -1639,6 +1639,7 @@
         let selectedProduct = '';
         let selectedPrice = 0;
         let paymentCompleted = false;
+        let paymentProtected = false; // Prevents modal from closing after payment
         
         // ===========================================
         // 🚀 DEPLOYMENT CONFIGURATION
@@ -1662,7 +1663,7 @@
                 showPayPal: true
             },
             production: {
-                clientId: 'AdKbwz7YtcU3GqQqz-QEVJ_42qUT6II0gs1yC8YF3GYb45apOtDkwk8EU8IZj-O9B7AGHo83JnJKf6DK', // Replace with actual production client ID
+                clientId: 'AW28kSHdGw-Y0p6CxvBqNfuZt_DV3pmV2xOgMhxR-VuDNLNzw03lqZp23QlX4XoPvZI4EyReDV4cBFU6', // Replace with your actual Live PayPal Client ID
                 buttonText: 'Pay with PayPal', 
                 processingText: 'Processing Payment...',
                 showPayPal: true
@@ -1676,6 +1677,7 @@
             selectedProduct = productName;
             selectedPrice = price;
             paymentCompleted = false;
+            paymentProtected = false; // Reset protection on modal open
             
             // Update modal content
             document.getElementById('modalTitle').textContent = `Complete Your Purchase: ${productName}`;
@@ -1696,6 +1698,14 @@
         }
 
         function closeApplicationModal() {
+            // Prevent closing if payment is completed but form not submitted
+            if (paymentProtected) {
+                console.log('Modal close prevented - payment completed, please submit form first');
+                alert('⚠️ Please complete the form below to receive your training materials. Your payment has been processed.');
+                return;
+            }
+            
+            console.log('closeApplicationModal called');
             document.getElementById('applicationModal').style.display = 'none';
             document.getElementById('applicationForm').reset();
             
@@ -1707,6 +1717,7 @@
             
             // Reset states
             paymentCompleted = false;
+            paymentProtected = false;
             selectedPrice = 0;
         }
 
@@ -1761,6 +1772,10 @@
 
                 // With no-cors, we can't check response status, so assume success
                 console.log('Form submitted to Google Apps Script');
+                
+                // Disable payment protection to allow modal close
+                paymentProtected = false;
+                
                 alert('🎉 Application submitted successfully! You\'ll receive your free training materials within 24 hours.');
                 closeApplicationModal();
                 
@@ -1801,6 +1816,9 @@ Timestamp: ${data.timestamp}`;
 
             const mailtoLink = `mailto:voiflo.community@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.open(mailtoLink);
+            
+            // Disable payment protection to allow modal close
+            paymentProtected = false;
             
             alert('Please send the email that just opened to complete your application!');
             closeApplicationModal();
@@ -1950,11 +1968,14 @@ Timestamp: ${data.timestamp}`;
         // Start auto-rotate and initialize
         startAutoRotate();
 
-        // Close modal when clicking outside
+        // Close modal when clicking outside (disabled after payment)
         window.onclick = function(event) {
             const modal = document.getElementById('applicationModal');
-            if (event.target === modal) {
+            if (event.target === modal && !paymentProtected) {
+                console.log('Modal closed by clicking outside');
                 closeApplicationModal();
+            } else if (paymentProtected) {
+                console.log('Modal close prevented - payment completed, form must be submitted first');
             }
         }
 
@@ -2104,6 +2125,7 @@ Timestamp: ${data.timestamp}`;
         
         function handlePaymentSuccess(paymentDetails) {
             paymentCompleted = true;
+            paymentProtected = true; // Enable payment protection
             
             // Hide payment section and show success message
             document.getElementById('paymentSection').style.display = 'none';
@@ -2279,15 +2301,15 @@ Timestamp: ${data.timestamp}`;
             if (DEPLOYMENT_MODE === 'demo') {
                 // Demo mode: Free access
                 pricing.innerHTML = `
-                    <span style="text-decoration: line-through; opacity: 0.6; font-size: 1.2rem; font-weight: 600;">$4.99</span>
+                    <span style="text-decoration: line-through; opacity: 0.6; font-size: 1.2rem; font-weight: 600;">$1.99</span>
                     <span style="color: #00c851; margin-left: 0.5rem; font-size: 1.5rem; font-weight: bold;">FREE</span>
                     <div class="price-note" style="color: #00c851; font-weight: 600;">Limited time free • No payment required</div>
                 `;
                 button.textContent = 'Get Free Access';
             } else {
-                // Sandbox/Production mode: $4.99 payment
+                // Sandbox/Production mode: $1.99 payment
                 pricing.innerHTML = `
-                    <span class="price">$4.99</span>
+                    <span class="price">$1.99</span>
                     <div class="price-note">One-time payment • Instant access</div>
                 `;
                 button.textContent = 'Purchase & Get Access';
@@ -2335,6 +2357,15 @@ Timestamp: ${data.timestamp}`;
 
         // Handle window resize for carousel
         window.addEventListener('resize', updateCarousel);
+        
+        // Disable ESC key modal close after payment
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && paymentProtected) {
+                console.log('ESC key blocked - payment completed, please submit form first');
+                event.preventDefault();
+                alert('⚠️ Please complete the form below to receive your training materials. Your payment has been processed.');
+            }
+        });
 
         // Pause auto-rotation when page is not visible
         document.addEventListener('visibilitychange', function() {
