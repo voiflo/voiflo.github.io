@@ -79,19 +79,12 @@ check_deployment_mode() {
         CURRENT_MODE=$(grep "const DEPLOYMENT_MODE = " index.html | sed "s/.*const DEPLOYMENT_MODE = '\([^']*\)'.*/\1/")
         echo -e "${BLUE}📋 Current deployment mode: ${GREEN}$CURRENT_MODE${NC}"
         
+        # Mode descriptions
         case $CURRENT_MODE in
-            "demo")
-                echo -e "${GREEN}   🎁 Demo mode - Users get free access${NC}"
-                ;;
-            "sandbox") 
-                echo -e "${YELLOW}   🧪 Sandbox mode - PayPal testing${NC}"
-                ;;
-            "production")
-                echo -e "${RED}   🚨 Production mode - Live payments${NC}"
-                ;;
-            *)
-                echo -e "${RED}   ❌ Unknown mode: $CURRENT_MODE${NC}"
-                ;;
+            "demo") echo -e "${GREEN}   🎁 Free access mode${NC}" ;;
+            "sandbox") echo -e "${YELLOW}   🧪 PayPal testing mode${NC}" ;;
+            "production") echo -e "${RED}   🚨 Live payments mode${NC}" ;;
+            *) echo -e "${RED}   ❌ Unknown mode: $CURRENT_MODE${NC}" ;;
         esac
     else
         echo -e "${RED}❌ index.html not found${NC}"
@@ -99,16 +92,20 @@ check_deployment_mode() {
     fi
 }
 
-# Function to build the Docker image
+# Function to build the Docker image with cache control
 build_image() {
     echo -e "${BLUE}🔨 Building Docker image...${NC}"
-    docker build -t $IMAGE_NAME .
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✅ Docker image built successfully!${NC}"
-    else
+    
+    # Build with cache invalidation
+    docker build \
+        --build-arg DEPLOYMENT_MODE="$CURRENT_MODE" \
+        --build-arg BUILD_TIMESTAMP="$(date +%s)" \
+        -t $IMAGE_NAME . || {
         echo -e "${RED}❌ Failed to build Docker image${NC}"
         exit 1
-    fi
+    }
+    
+    echo -e "${GREEN}✅ Docker image built successfully!${NC}"
 }
 
 # Function to run the container
@@ -117,33 +114,28 @@ run_container() {
     docker run -d \
         --name $CONTAINER_NAME \
         -p $HOST_PORT:$CONTAINER_PORT \
-        $IMAGE_NAME
-    
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✅ Container started successfully!${NC}"
-    else
+        $IMAGE_NAME || {
         echo -e "${RED}❌ Failed to start container${NC}"
         exit 1
-    fi
+    }
+    
+    echo -e "${GREEN}✅ Container started successfully!${NC}"
 }
 
 # Function to wait for the application to be ready
 wait_for_app() {
-    echo -e "${YELLOW}⏳ Waiting for application to be ready...${NC}"
-    max_attempts=30
-    attempt=1
+    echo -e "${YELLOW}⏳ Waiting for application...${NC}"
     
-    while [ $attempt -le $max_attempts ]; do
-        if curl -s http://localhost:$HOST_PORT/health > /dev/null 2>&1; then
-            echo -e "${GREEN}✅ Application is ready!${NC}"
+    for i in $(seq 1 30); do
+        if curl -sS http://localhost:$HOST_PORT/health >/dev/null 2>&1; then
+            echo -e "${GREEN}✅ Application ready!${NC}"
             return 0
         fi
-        echo -n "."
+        printf "."
         sleep 1
-        attempt=$((attempt + 1))
     done
     
-    echo -e "${RED}❌ Application failed to start within 30 seconds${NC}"
+    echo -e "${RED}❌ Application timeout${NC}"
     return 1
 }
 

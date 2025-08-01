@@ -1,6 +1,10 @@
 # Use nginx alpine for lightweight production image
 FROM nginx:1.25-alpine
 
+# Build args for cache invalidation
+ARG DEPLOYMENT_MODE=production
+ARG BUILD_TIMESTAMP=unknown
+
 # Install wget for health checks
 RUN apk add --no-cache wget
 
@@ -10,10 +14,11 @@ COPY example_video.mov /usr/share/nginx/html/
 COPY girl_influencers_studio.png /usr/share/nginx/html/
 COPY flowchart.png /usr/share/nginx/html/
 COPY ecommerce_teaching.png /usr/share/nginx/html/
-COPY retail_teaching.png /usr/share/nginx/html/
 
-# Create a simple health check endpoint
-RUN echo "healthy" > /usr/share/nginx/html/health
+# Create build info and health endpoints
+RUN DETECTED_MODE=$(grep "const DEPLOYMENT_MODE = " /usr/share/nginx/html/index.html | sed "s/.*const DEPLOYMENT_MODE = '\([^']*\)'.*/\1/" 2>/dev/null || echo "unknown") && \
+    printf "mode=%s\nbuild_timestamp=%s\nbuild_date=%s\n" "$DETECTED_MODE" "$BUILD_TIMESTAMP" "$(date)" > /usr/share/nginx/html/build-info.txt && \
+    echo "healthy" > /usr/share/nginx/html/health
 
 # Create custom nginx config that works with non-root user
 RUN mkdir -p /tmp/nginx && \
@@ -59,17 +64,28 @@ http {
         root /usr/share/nginx/html;
         index index.html;
         
-        # Security headers
-        add_header X-Frame-Options "DENY" always;
+        # Security headers (PayPal-compatible)
+        add_header X-Frame-Options "SAMEORIGIN" always;
         add_header X-Content-Type-Options "nosniff" always;
         add_header X-XSS-Protection "1; mode=block" always;
         add_header Referrer-Policy "strict-origin-when-cross-origin" always;
         
-        # Main site
+        # Content Security Policy for PayPal integration
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.paypal.com https://www.paypalobjects.com https://js.paypal.com https://c.paypal.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; frame-src https://www.paypal.com https://js.paypal.com; connect-src 'self' https://www.paypal.com https://api.paypal.com https://api.sandbox.paypal.com;" always;
+        
+        # Main site - Reduced caching for mode switching
         location / {
             try_files \$uri \$uri/ /index.html;
-            expires 5m;
-            add_header Cache-Control "public, no-transform";
+            expires 1m;
+            add_header Cache-Control "public, no-transform, must-revalidate";
+            add_header Pragma "no-cache";
+        }
+        
+        # Build info endpoint for cache busting
+        location /build-info.txt {
+            access_log off;
+            expires -1;
+            add_header Cache-Control "no-cache, no-store, must-revalidate";
         }
         
         # Health check endpoint

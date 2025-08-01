@@ -6,9 +6,7 @@
     <title>Elite Influencer Community - Digital Training Programs</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- PayPal SDK - Client ID is safe to be public -->
-    <!-- Testing: Using PayPal Sandbox for demo purposes -->
-    <script src="https://www.paypal.com/sdk/js?client-id=demo_client_id&currency=USD&disable-funding=venmo" id="paypal-sdk"></script>
+    <!-- PayPal SDK - Will be loaded dynamically based on DEPLOYMENT_MODE -->
     <style>
         * {
             margin: 0;
@@ -1021,6 +1019,26 @@
             pointer-events: none;
         }
 
+        .testing-info {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            font-size: 0.85rem;
+        }
+
+        .testing-info h4 {
+            margin: 0 0 0.3rem 0;
+            color: #856404;
+            font-size: 0.9rem;
+        }
+
+        .testing-info p {
+            margin: 0;
+            color: #856404;
+        }
+
         .product-price {
             text-align: center;
             margin: 1rem 0;
@@ -1045,10 +1063,10 @@
             top: 80px;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            background: linear-gradient(135deg, #ffa726, #ff9800);
             color: white;
             text-align: center;
-            padding: 0.5rem;
+            padding: 0.4rem;
             font-size: 0.9rem;
             font-weight: 600;
             z-index: 1500;
@@ -1627,23 +1645,27 @@
         // Change this ONE flag to control the entire site mode
         // ===========================================
         const DEPLOYMENT_MODE = 'demo'; // OPTIONS: 'demo', 'sandbox', 'production'
+        const CACHE_BUSTER = Date.now(); // Force browser cache refresh on mode changes
         
-        // PayPal Configuration (update Client IDs as needed)
+        // PayPal Configuration
         const PAYPAL_CONFIG = {
             demo: {
                 clientId: 'demo_client_id',
-                description: 'Limited Time Free Access',
-                userMessage: 'Free for a limited time! Click "Get Free Access" - no credit card required.'
+                buttonText: 'Get Free Access',
+                processingText: 'Processing Free Access...',
+                showPayPal: false
             },
             sandbox: {
-                clientId: 'YOUR_SANDBOX_CLIENT_ID_HERE', // TODO
-                description: 'PayPal Sandbox Testing',
-                userMessage: 'Testing mode - Use PayPal sandbox accounts or test credit card numbers'
+                clientId: 'AdKbwz7YtcU3GqQqz-QEVJ_42qUT6II0gs1yC8YF3GYb45apOtDkwk8EU8IZj-O9B7AGHo83JnJKf6DK',
+                buttonText: 'Pay with PayPal',
+                processingText: 'Processing Payment...',
+                showPayPal: true
             },
             production: {
-                clientId: 'YOUR_PAYPAL_CLIENT_ID', // TODO
-                description: 'Live PayPal Payments',
-                userMessage: 'Secure payment processing by PayPal'
+                clientId: 'AdKbwz7YtcU3GqQqz-QEVJ_42qUT6II0gs1yC8YF3GYb45apOtDkwk8EU8IZj-O9B7AGHo83JnJKf6DK', // Replace with actual production client ID
+                buttonText: 'Pay with PayPal', 
+                processingText: 'Processing Payment...',
+                showPayPal: true
             }
         };
         
@@ -1664,15 +1686,11 @@
             document.getElementById('paymentCompleted').style.display = 'none';
             document.getElementById('applicationForm').classList.add('form-disabled');
             
-            // Add testing info
-            addTestingInfo();
+            // Add payment info
+            addPaymentInfo();
             
-            // Initialize payment button based on mode
-            if (DEPLOYMENT_MODE === 'demo') {
-                initDemoPaymentButton(price);
-            } else {
-                initPayPalButton(price);
-            }
+            // Initialize unified payment button
+            initPaymentButton(price);
             
             document.getElementById('applicationModal').style.display = 'block';
         }
@@ -1952,60 +1970,55 @@ Timestamp: ${data.timestamp}`;
             }
         });
 
-        // Testing Functions
-        function addTestingInfo() {
+        // Payment info display
+        function addPaymentInfo() {
             const paymentSection = document.getElementById('paymentSection');
             
-            // Remove existing testing info
-            const existingInfo = paymentSection.querySelector('.testing-info');
+            // Remove existing info
+            const existingInfo = paymentSection.querySelector('.payment-info');
             if (existingInfo) {
                 existingInfo.remove();
             }
             
-            // Add user-appropriate messaging
-            const config = PAYPAL_CONFIG[DEPLOYMENT_MODE];
-            if (config.userMessage) {
-                const testingInfo = document.createElement('div');
-                testingInfo.className = 'testing-info';
-                
-                if (DEPLOYMENT_MODE === 'demo') {
-                    testingInfo.innerHTML = `
-                        <h4><i class="fas fa-gift"></i> ${config.description}</h4>
-                        <p>${config.userMessage}</p>
-                    `;
-                } else if (DEPLOYMENT_MODE === 'sandbox') {
-                    testingInfo.innerHTML = `
-                        <h4><i class="fas fa-vial"></i> ${config.description}</h4>
-                        <p>${config.userMessage}</p>
-                    `;
-                } else {
-                    testingInfo.innerHTML = `
-                        <h4><i class="fas fa-shield-alt"></i> ${config.description}</h4>
-                        <p>${config.userMessage}</p>
-                    `;
-                }
-                
-                paymentSection.insertBefore(testingInfo, paymentSection.querySelector('.price-display'));
+            // Only show special messaging for sandbox mode
+            if (DEPLOYMENT_MODE === 'sandbox') {
+                const paymentInfo = document.createElement('div');
+                paymentInfo.className = 'payment-info testing-info';
+                paymentInfo.innerHTML = `
+                    <h4><i class="fas fa-vial"></i> PayPal Sandbox Testing</h4>
+                    <p>Testing mode - Use PayPal sandbox accounts or test credit card numbers</p>
+                `;
+                paymentSection.insertBefore(paymentInfo, paymentSection.querySelector('.price-display'));
             }
         }
         
-        function initDemoPaymentButton(amount) {
+        // Unified payment button initialization
+        function initPaymentButton(amount) {
             const container = document.getElementById('paypal-button-container');
-            container.innerHTML = `
-                <button class="demo-payment-button" onclick="simulatePayment()">
-                    <i class="fas fa-gift"></i> Get Free Access
-                </button>
-                <p style="font-size: 0.8rem; color: #00c851; text-align: center; margin-top: 0.5rem; font-weight: 600;">
-                    <i class="fas fa-star"></i> No credit card required • Limited time offer
-                </p>
-            `;
+            const config = PAYPAL_CONFIG[DEPLOYMENT_MODE];
+            
+            if (DEPLOYMENT_MODE === 'demo') {
+                // Demo mode: Free access button
+                container.innerHTML = `
+                    <button class="demo-payment-button" onclick="simulatePayment()">
+                        <i class="fas fa-gift"></i> ${config.buttonText}
+                    </button>
+                    <p style="font-size: 0.8rem; color: #00c851; text-align: center; margin-top: 0.5rem; font-weight: 600;">
+                        <i class="fas fa-star"></i> No credit card required • Limited time offer
+                    </p>
+                `;
+            } else {
+                // Sandbox/Production: PayPal button
+                initPayPalButton(amount);
+            }
         }
         
         function simulatePayment() {
             // Show loading state
             const button = document.querySelector('.demo-payment-button');
+            const config = PAYPAL_CONFIG[DEPLOYMENT_MODE];
             const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Free Access...';
+            button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${config.processingText}`;
             button.disabled = true;
             
             // Simulate processing delay
@@ -2038,61 +2051,55 @@ Timestamp: ${data.timestamp}`;
         
         // PayPal Integration Functions
         function initPayPalButton(amount) {
-            // Clear existing button
             const container = document.getElementById('paypal-button-container');
             container.innerHTML = '';
             
-            // Check if PayPal SDK is loaded
-            if (typeof paypal === 'undefined') {
+            if (window.paypal && window.paypal.Buttons) {
+                paypal.Buttons({
+                    style: {
+                        color: 'blue',
+                        shape: 'pill',
+                        label: 'paypal',
+                        layout: 'horizontal',
+                        height: 45
+                    },
+                    
+                    createOrder: function(data, actions) {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: amount.toFixed(2),
+                                    currency_code: 'USD'
+                                },
+                                description: selectedProduct || 'Voiflo Training Materials'
+                            }]
+                        });
+                    },
+                    
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(details) {
+                            handlePaymentSuccess(details);
+                        });
+                    },
+                    
+                    onError: function(err) {
+                        console.error('PayPal error:', err);
+                        alert('Payment failed. Please try again.');
+                    },
+                    
+                    onCancel: function(data) {
+                        // Payment cancelled, no action needed
+                    }
+                }).render('#paypal-button-container');
+                
+            } else {
                 container.innerHTML = `
-                    <div style="color: #ff6b6b; text-align: center; padding: 1rem; border: 1px solid #ff6b6b; border-radius: 8px;">
-                        <p><strong>PayPal SDK not loaded</strong></p>
-                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">This happens in ${DEPLOYMENT_MODE} mode. Switch to Demo mode to test the payment flow.</p>
+                    <div style="color: #2196F3; text-align: center; padding: 1rem; border: 1px solid #2196F3; border-radius: 8px;">
+                        <p><strong><i class="fas fa-spinner fa-spin"></i> Loading PayPal...</strong></p>
                     </div>
                 `;
-                return;
+                setTimeout(() => initPayPalButton(amount), 2000);
             }
-            
-            const config = PAYPAL_CONFIG[DEPLOYMENT_MODE];
-            
-            paypal.Buttons({
-                style: {
-                    color: 'blue',
-                    shape: 'pill',
-                    label: 'paypal',
-                    layout: 'horizontal',
-                    height: 45
-                },
-                
-                createOrder: function(data, actions) {
-                    return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: amount.toFixed(2),
-                                currency_code: 'USD'
-                            },
-                            description: selectedProduct
-                        }]
-                    });
-                },
-                
-                onApprove: function(data, actions) {
-                    return actions.order.capture().then(function(details) {
-                        console.log('Payment completed:', details);
-                        handlePaymentSuccess(details);
-                    });
-                },
-                
-                onError: function(err) {
-                    console.error('PayPal error:', err);
-                    alert('Payment failed. Please try again or contact support.');
-                },
-                
-                onCancel: function(data) {
-                    console.log('Payment cancelled:', data);
-                    // Payment was cancelled, no action needed
-                }
-            }).render('#paypal-button-container');
         }
         
         function handlePaymentSuccess(paymentDetails) {
@@ -2105,19 +2112,19 @@ Timestamp: ${data.timestamp}`;
             
             // Customize success message based on mode
             const isFree = paymentDetails.id.startsWith('FREE_');
-            const isDemo = paymentDetails.id.startsWith('DEMO_');
             
+            // Unified success messages
             if (DEPLOYMENT_MODE === 'demo' && isFree) {
                 successDiv.innerHTML = `
-                    <h4><i class="fas fa-check-circle"></i> Free Access Granted!</h4>
-                    <p>Congratulations! You've secured your free training materials. Complete the form below to receive everything instantly and join our exclusive brand collaboration network.</p>
-                    <p style="opacity: 0.8; font-size: 0.9rem; color: #00c851;"><em><i class="fas fa-gift"></i> Limited time offer - Access granted</em></p>
+                    <h4><i class="fas fa-check-circle"></i> Access Confirmed!</h4>
+                    <p>Congratulations! Complete the form below to receive your training materials and join our exclusive brand collaboration network.</p>
+                    <p style="opacity: 0.8; font-size: 0.9rem; color: #00c851;"><em><i class="fas fa-gift"></i> Free access granted</em></p>
                 `;
-            } else if (isDemo) {
+            } else if (DEPLOYMENT_MODE === 'sandbox') {
                 successDiv.innerHTML = `
                     <h4><i class="fas fa-check-circle"></i> Test Payment Successful!</h4>
-                    <p>Please complete the form below to receive your training materials and join our brand collaboration network.</p>
-                    <p style="opacity: 0.8; font-size: 0.9rem;"><em>Test transaction ID: ${paymentDetails.id}</em></p>
+                    <p>Complete the form below to receive your training materials and join our brand collaboration network.</p>
+                    <p style="opacity: 0.8; font-size: 0.9rem;"><em>Test transaction: ${paymentDetails.id}</em></p>
                 `;
             } else {
                 successDiv.innerHTML = `
@@ -2131,7 +2138,7 @@ Timestamp: ${data.timestamp}`;
             
             // Update modal title
             const modalTitle = DEPLOYMENT_MODE === 'demo' && isFree ? 
-                '🎉 Free Access Confirmed! Complete Your Profile' : 
+                '🎉 Access Confirmed! Complete Your Profile' : 
                 '🎉 Payment Successful! Complete Your Profile';
             document.getElementById('modalTitle').textContent = modalTitle;
             
@@ -2165,7 +2172,7 @@ Timestamp: ${data.timestamp}`;
                 if (DEPLOYMENT_MODE === 'sandbox') {
                     banner.innerHTML = `
                         <i class="fas fa-vial"></i> 
-                        TESTING MODE: ${PAYPAL_CONFIG[DEPLOYMENT_MODE].description} - Use sandbox.paypal.com test accounts
+                        SANDBOX MODE: For testing only - Use sandbox.paypal.com test accounts
                     `;
                 } else {
                     banner.remove();
@@ -2173,113 +2180,157 @@ Timestamp: ${data.timestamp}`;
             }
         }
         
-        function loadPayPalSDK(clientId) {
-            // Remove existing PayPal SDK
-            const existingScript = document.getElementById('paypal-sdk');
-            if (existingScript) {
-                existingScript.remove();
-            }
-            
-            // Load new PayPal SDK
-            const script = document.createElement('script');
-            script.id = 'paypal-sdk';
-            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD&disable-funding=venmo`;
-            document.head.appendChild(script);
+        // Dynamic PayPal SDK loader
+        function loadPayPalSDK() {
+            return new Promise((resolve, reject) => {
+                const config = PAYPAL_CONFIG[DEPLOYMENT_MODE];
+                
+                // Demo mode doesn't need PayPal SDK
+                if (!config.showPayPal) {
+                    resolve();
+                    return;
+                }
+                
+                // Validate client ID
+                if (!config.clientId || config.clientId.includes('YOUR_') || config.clientId === 'demo_client_id') {
+                    console.error('❌ Invalid Client ID for', DEPLOYMENT_MODE);
+                    reject(new Error('Invalid PayPal Client ID for ' + DEPLOYMENT_MODE + ' mode'));
+                    return;
+                }
+                
+                // Remove any existing PayPal SDK
+                const existingScript = document.getElementById('paypal-sdk');
+                if (existingScript) {
+                    existingScript.remove();
+                    if (window.paypal) delete window.paypal;
+                }
+                
+                // Create and load the PayPal SDK script
+                const script = document.createElement('script');
+                script.id = 'paypal-sdk';
+                script.src = `https://www.paypal.com/sdk/js?client-id=${config.clientId}&currency=USD&disable-funding=venmo`;
+                
+                script.onload = function() {
+                    // Wait for PayPal object to be available
+                    let attempts = 0;
+                    const checkPayPal = () => {
+                        attempts++;
+                        
+                        if (window.paypal && window.paypal.Buttons) {
+                            resolve();
+                        } else if (attempts < 20) {
+                            setTimeout(checkPayPal, 500);
+                        } else {
+                            reject(new Error('PayPal SDK timeout'));
+                        }
+                    };
+                    
+                    checkPayPal();
+                };
+                
+                script.onerror = function() {
+                    reject(new Error('PayPal SDK network error'));
+                };
+                
+                document.head.appendChild(script);
+            });
         }
         
-        function createTestingControls() {
-            // Only show testing controls if enabled
-            if (!SHOW_TESTING_CONTROLS) {
-                return;
-            }
-            
-            const controls = document.createElement('div');
-            controls.className = 'testing-controls';
-            controls.innerHTML = `
-                <h4><i class="fas fa-cog"></i> Dev Controls</h4>
-                <div class="mode-info">
-                    <p>Current mode: <strong>${DEPLOYMENT_MODE}</strong></p>
-                    <p style="font-size: 0.9rem; opacity: 0.8;">To change mode, edit DEPLOYMENT_MODE in index.html line 1628</p>
-                </div>
-            `;
-            document.body.appendChild(controls);
-        }
         
-        // Initialize product display based on mode
-        function initializeProductDisplay() {
-            console.log('Initializing product display, mode:', DEPLOYMENT_MODE);
-            const pricing = document.getElementById('productPricing');
-            const button = document.getElementById('productButton');
+        // Cache and mode verification
+        function verifyCacheAndMode() {
+            // Clean title for all public-facing modes
+            const isPublicMode = DEPLOYMENT_MODE === 'demo' || DEPLOYMENT_MODE === 'production';
+            document.title = isPublicMode 
+                ? 'Voiflo - Elite Influencer Community'
+                : `Voiflo [${DEPLOYMENT_MODE.toUpperCase()}] - Elite Influencer Community`;
             
-            if (!pricing || !button) {
-                console.error('Product pricing elements not found');
-                return;
+            // Console logs only for development
+            if (DEPLOYMENT_MODE === 'sandbox') {
+                console.log(`🚀 Running in ${DEPLOYMENT_MODE.toUpperCase()} mode (cache: ${CACHE_BUSTER})`);
             }
             
-            if (DEPLOYMENT_MODE === 'demo') {
-                console.log('Keeping demo mode pricing (already set in HTML)');
-                // Demo mode pricing is already set in the HTML, no need to change
+            // Clean metadata for public modes
+            const metaDescription = document.querySelector('meta[name="description"]');
+            const description = isPublicMode 
+                ? 'Elite Influencer Training - Digital Marketing Programs'
+                : `Elite Influencer Training [${DEPLOYMENT_MODE}] - Digital Marketing Programs`;
+                
+            if (metaDescription) {
+                metaDescription.content = description;
             } else {
-                console.log('Setting regular mode pricing');
-                // Show regular pricing for sandbox/production
-                pricing.innerHTML = `
-                    <span class="price">$4.99</span>
-                    <div class="price-note">One-time payment • Instant access</div>
-                `;
-                button.textContent = 'Purchase & Get Access';
+                const meta = document.createElement('meta');
+                meta.name = 'description';
+                meta.content = description;
+                document.head.appendChild(meta);
             }
-            console.log('Product display updated');
         }
-        
-        // Initialize product display immediately and on DOM ready
+
+        // Initialize product display based on mode
         function forceInitializeProductDisplay() {
-            console.log('Force initializing product display, mode:', DEPLOYMENT_MODE);
             const pricing = document.getElementById('productPricing');
             const button = document.getElementById('productButton');
             
             if (!pricing || !button) {
-                console.error('Product pricing elements not found, retrying...');
                 setTimeout(forceInitializeProductDisplay, 100);
                 return;
             }
             
             if (DEPLOYMENT_MODE === 'demo') {
-                console.log('Keeping demo mode pricing (already set in HTML)');
-                // Demo mode pricing is already set in the HTML, no need to change
+                // Demo mode: Free access
+                pricing.innerHTML = `
+                    <span style="text-decoration: line-through; opacity: 0.6; font-size: 1.2rem; font-weight: 600;">$4.99</span>
+                    <span style="color: #00c851; margin-left: 0.5rem; font-size: 1.5rem; font-weight: bold;">FREE</span>
+                    <div class="price-note" style="color: #00c851; font-weight: 600;">Limited time free • No payment required</div>
+                `;
+                button.textContent = 'Get Free Access';
             } else {
-                console.log('Setting regular mode pricing for:', DEPLOYMENT_MODE);
-                // Show regular pricing for sandbox/production
+                // Sandbox/Production mode: $4.99 payment
                 pricing.innerHTML = `
                     <span class="price">$4.99</span>
                     <div class="price-note">One-time payment • Instant access</div>
                 `;
                 button.textContent = 'Purchase & Get Access';
-                console.log('Updated pricing for', DEPLOYMENT_MODE, 'mode');
             }
         }
 
         // Initialize product display when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM loaded, initializing product display');
             forceInitializeProductDisplay();
         });
 
-        // Initialize carousels and testing on load
+        // Carousel function (placeholder - add specific carousel logic if needed)
+        function updateCarousel() {
+            // Basic carousel update function
+            console.log('Carousel updated');
+        }
+
+        // Initialize on load
         window.addEventListener('load', function() {
+            // Verify cache and mode first
+            verifyCacheAndMode();
+            
             setTimeout(updateCarousel, 100);
             initTestimonialsCarousel();
             
-            // Initialize product display again to ensure it's set
+            // Initialize product display
+            forceInitializeProductDisplay();
             setTimeout(forceInitializeProductDisplay, 200);
-            setTimeout(forceInitializeProductDisplay, 500);
             
-            // Initialize testing controls (only if enabled)
-            createTestingControls();
-            updateTestingBanner();
+            // Load PayPal SDK for sandbox and production modes
+            loadPayPalSDK()
+                .then(() => {
+                    window.paypalSDKLoaded = true;
+                })
+                .catch(error => {
+                    console.error('PayPal SDK failed to load:', error.message);
+                    window.paypalSDKLoaded = false;
+                });
             
-            console.log('Voiflo Payment System initialized');
-            console.log('Deployment mode:', DEPLOYMENT_MODE);
-            console.log('Show testing controls:', SHOW_TESTING_CONTROLS);
+            // Show sandbox banner only
+            if (DEPLOYMENT_MODE === 'sandbox') {
+                updateTestingBanner();
+            }
         });
 
         // Handle window resize for carousel
