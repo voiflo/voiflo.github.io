@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport setting for mobile responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fcfcfc;
+            /* Ensure background graphics print correctly */
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .playfair { font-family: 'Playfair Display', serif; }
+        .gradient-text {
+            background: linear-gradient(90deg, #FF0050, #00F2EA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow-card:hover {
+            box-shadow: 0 0 20px rgba(0, 242, 234, 0.15), 0 0 20px rgba(255, 0, 80, 0.15);
+            transform: translateY(-5px);
+            transition: all 0.4s ease;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        /* Animation: Scan Line */
+        .scan-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00F2EA, transparent);
+            position: absolute;
+            width: 100%;
+            top: 0;
+            animation: scan 3s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        /* Animation: Floating Card */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+        }
+
+        /* --- PRINT / PDF SPECIFIC STYLES --- */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+            body {
+                background-color: white;
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 0;
+                margin: 0;
+                min-height: auto;
+            }
+            /* Force the container to be fixed width for PDF generation */
+            .poster-container {
+                max-width: 800px !important;
+                width: 800px !important;
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 auto;
+                /* SCALE DOWN to fit single page (approx 65% of original size) */
+                transform: scale(0.65);
+                transform-origin: top center;
+            }
+            /* Force the grid to show 3 columns even if page size is small */
+            .grid-cols-1 {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            }
+            /* Force the viral card to be visible in PDF */
+            .viral-card {
+                display: block !important;
+                position: absolute !important;
+                transform: scale(1) !important;
+                right: 1.5rem !important;
+                bottom: 2.5rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex justify-center min-h-screen">
+
+    <!-- Poster Container (Class added for print targeting) -->
+    <div class="poster-container max-w-[800px] w-full bg-white shadow-2xl rounded-3xl overflow-hidden border border-gray-100 relative">
+        
+        <!-- Header / Hero Section -->
+        <!-- Changed h-[550px] to min-h-[550px] to allow growth on mobile if text wraps -->
+        <div class="relative min-h-[550px] bg-black flex flex-col justify-center items-center text-center px-6 py-10 overflow-hidden">
+            <!-- Background Decorative Elements -->
+            <div class="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none">
+                <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#FF0050] blur-[120px] rounded-full"></div>
+                <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#00F2EA] blur-[120px] rounded-full"></div>
+            </div>
+
+            <!-- Viral Card Illustration -->
+            <!-- Updated: Separated wrapper for positioning/scaling and inner div for animation to prevent Transform conflicts -->
+            <div class="viral-card absolute right-4 bottom-4 md:right-6 md:bottom-10 z-20 scale-75 origin-bottom-right md:scale-100">
+                 <div class="w-40 aspect-[9/16] bg-gray-900 rounded-2xl border border-gray-800 shadow-2xl floating overflow-hidden relative">
+                     <div class="absolute top-2 right-2 px-2 py-0.5 bg-[#FF0050] text-[8px] font-bold text-white rounded-full z-10">TRENDING</div>
+                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                     
+                     <!-- Play Icon Overlay -->
+                     <div class="w-full h-full flex items-center justify-center opacity-30">
+                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                     </div>
+
+                     <!-- Metrics Overlay -->
+                     <div class="absolute bottom-4 left-4 z-10 text-left">
+                        <div class="text-[9px] text-white/80 font-bold mb-0.5">@viral_trend</div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[16px] text-[#00F2EA] font-black leading-none">12.8M</span>
+                            <span class="text-[8px] text-gray-400 uppercase font-bold">Views</span>
+                        </div>
+                     </div>
+                 </div>
+            </div>
+
+            <!-- Content -->
+            <!-- Updated padding: md:mb-20 for desktop lift, pb-20 for mobile to clear the card -->
+            <div class="relative z-30 md:mb-20 pb-20 md:pb-0">
+                <div class="text-[#00F2EA] tracking-widest text-sm font-bold mb-4 uppercase">Direct From the Founder</div>
+                <!-- Restored text sizes -->
+                <h1 class="playfair text-white text-5xl md:text-7xl mb-6 leading-tight italic">
+                    Viral Isn’t a Guess.<br>
+                    <span class="gradient-text">It’s a Calculation.</span>
+                </h1>
+                <p class="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                    Tired of posting and praying? I built <span class="text-white font-semibold italic">Voiflo</span> to turn the <span class="text-[#00F2EA] font-semibold">TikTok</span> algorithm into a predictable blueprint. Stop chasing trends: <span class="text-[#00F2EA] font-semibold">clone the success</span> of the top 1% today.
+                </p>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="p-8 md:p-12 bg-[#f9fafb]">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Product 1 -->
+                <div class="glow-card glass p-6 rounded-2xl flex flex-col h-full border border-gray-200">
+                    <div class="w-12 h-12 bg-[#FF0050] rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-pink-200">
+                        <svg class="text-white w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    </div>
+                    <h3 class="playfair text-2xl mb-3 text-gray-900 italic font-bold">Real-Time Trending</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                        Our crawlers scan the horizon 24/7. Filter by your niche to find the exact tags and viral patterns your competitors are using <span class="font-semibold text-black italic">right now.</span>
+                    </p>
+                    <div class="mt-auto text-xs font-bold text-[#FF0050] tracking-wider uppercase italic">Instant Trend Access</div>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="glow-card glass p-6 rounded-2xl flex flex-col h-full border border-gray-200">
+                    <div class="w-12 h-12 bg-black rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-gray-300">
+                        <svg class="text-white w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                    </div>
+                    <h3 class="playfair text-2xl mb-3 text-gray-900 italic font-bold">The Video Architect</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                        Break down viral videos with deep frame-by-frame analysis. Our AI generates your unique "Viral Clone" version of anything.
+                    </p>
+                    <div class="mt-auto text-xs font-bold text-black tracking-wider uppercase italic">Viral Content Cloning</div>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="glow-card glass p-6 rounded-2xl flex flex-col h-full border border-gray-200">
+                    <div class="w-12 h-12 bg-[#00F2EA] rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-cyan-200">
+                        <svg class="text-white w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="playfair text-2xl mb-3 text-gray-900 italic font-bold">The Connection Hub</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                        Mass-scrape the data that matters. Get direct contact info for influencers, marketers, and high-value commenters. Build your network with precision.
+                    </p>
+                    <div class="mt-auto text-xs font-bold text-[#00F2EA] tracking-wider uppercase italic">Deep Lead Generation</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Intelligence Lab / Crawler Illustration -->
+        <div class="px-8 md:px-12 py-16 bg-white flex flex-col items-center border-t border-gray-50">
+            <div class="max-w-3xl w-full">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="h-[1px] flex-grow bg-gray-200"></div>
+                    <span class="text-[10px] font-bold text-gray-400 tracking-widest uppercase italic">Voiflo Intelligence Lab v2.0</span>
+                    <div class="h-[1px] flex-grow bg-gray-200"></div>
+                </div>
+
+                <!-- Mock Dashboard Illustration -->
+                <div class="w-full bg-gray-900 rounded-2xl p-6 shadow-2xl relative overflow-hidden border border-gray-800">
+                    <div class="scan-line"></div>
+                    
+                    <div class="flex flex-col md:flex-row gap-6">
+                        <!-- Left: Scraped Metrics -->
+                        <div class="w-full md:w-1/3 flex flex-col gap-3">
+                            <div class="bg-gray-800/50 p-3 rounded-lg border border-gray-700">
+                                <div class="text-[8px] text-gray-500 uppercase font-bold">Current Node</div>
+                                <div class="text-[#00F2EA] font-mono text-xs">@viral_trend</div>
+                            </div>
+                            <div class="bg-[#FF0050]/10 p-3 rounded-lg border border-[#FF0050]/30">
+                                <div class="text-[8px] text-[#FF0050] uppercase font-bold">Live Stats</div>
+                                <div class="text-white font-mono text-sm font-bold">12.8M <span class="text-[10px] text-gray-400">Views</span></div>
+                            </div>
+                            <div class="bg-gray-800/50 p-3 rounded-lg border border-gray-700">
+                                <div class="text-[8px] text-gray-500 uppercase font-bold">Success Map</div>
+                                <div class="w-full bg-gray-700 h-1.5 mt-2 rounded-full overflow-hidden">
+                                    <div class="bg-gradient-to-r from-[#FF0050] to-[#00F2EA] w-[92%] h-full"></div>
+                                </div>
+                                <div class="text-right text-[10px] text-white font-bold mt-1">92% AI Accuracy</div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Trends Database -->
+                        <div class="w-full md:w-2/3 flex flex-col gap-4">
+                            <div class="bg-black/40 rounded-xl p-4 border border-gray-800">
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="text-[10px] text-white font-bold tracking-widest uppercase italic">Master Trend Database</span>
+                                    <span class="text-[9px] text-[#00F2EA] font-mono pulse-text">● LIVE_FEED</span>
+                                </div>
+                                <!-- Table Layout Mock -->
+                                <div class="space-y-2">
+                                    <div class="grid grid-cols-3 text-[8px] text-gray-500 uppercase font-bold border-b border-gray-800 pb-1">
+                                        <div>TREND_KEY</div>
+                                        <div>VOLUME</div>
+                                        <div>GROWTH</div>
+                                    </div>
+                                    <div class="grid grid-cols-3 text-[9px] font-mono py-1 border-b border-gray-800/50">
+                                        <div class="text-white">#pov_blue</div>
+                                        <div class="text-gray-400">14.2M</div>
+                                        <div class="text-[#00F2EA]">+240%</div>
+                                    </div>
+                                    <div class="grid grid-cols-3 text-[9px] font-mono py-1 border-b border-gray-800/50">
+                                        <div class="text-white">#minimal_chic</div>
+                                        <div class="text-gray-400">8.1M</div>
+                                        <div class="text-[#FF0050]">+115%</div>
+                                    </div>
+                                    <div class="grid grid-cols-3 text-[9px] font-mono py-1">
+                                        <div class="text-white">#founder_era</div>
+                                        <div class="text-gray-400">22.4M</div>
+                                        <div class="text-[#00F2EA]">+380%</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cloning Flow Integration -->
+                            <div class="flex items-center justify-between gap-2 px-2">
+                                <div class="flex flex-col items-center gap-1">
+                                    <div class="w-8 h-8 rounded-lg bg-[#FF0050]/20 border border-[#FF0050]/40 flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-[#FF0050]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
+                                    </div>
+                                    <span class="text-[7px] text-gray-500 uppercase">Input</span>
+                                </div>
+                                <div class="flex-grow flex items-center">
+                                    <div class="w-full h-px border-t border-dashed border-gray-600 relative">
+                                        <div class="absolute -top-1.5 left-1/2 -translate-x-1/2 text-[8px] text-[#00F2EA] font-mono">CLONING...</div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center gap-1">
+                                    <div class="w-8 h-8 rounded-lg bg-[#00F2EA]/20 border border-[#00F2EA]/40 flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-[#00F2EA]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    </div>
+                                    <span class="text-[7px] text-gray-500 uppercase">Output</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Code Snippet Mock -->
+                    <div class="mt-6 pt-4 border-t border-gray-800">
+                        <div class="text-[9px] font-mono text-gray-500 leading-relaxed">
+                            <span class="text-[#FF0050]">crawl_data</span>(target: <span class="text-white">"@viral_trend"</span>) <br>
+                            >> <span class="text-[#00F2EA]">meta_stats</span>: { views: "12.8M", engagement: "9.2%", hook: "Frame_3" } <br>
+                            >> <span class="text-white font-bold italic">EXPORTING_TO_BLUEPRINT...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer / CTA -->
+        <div class="bg-white p-12 text-center">
+            <h2 class="playfair text-3xl italic text-gray-900 mb-4">Are you ready to go viral?</h2>
+            <p class="text-gray-500 mb-8 max-w-lg mx-auto leading-relaxed">
+                The algorithm isn't your enemy anymore. It's your employee. <br>
+                Send your request to <span class="text-black font-bold">voiflo.community@gmail.com</span>, or find me and chat with me <span class="text-black font-bold">@christine_voiflo</span> on TikTok.
+            </p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <a href="mailto:voiflo.community@gmail.com" class="bg-black text-white px-8 py-4 rounded-full font-bold hover:bg-gray-800 transition shadow-xl tracking-widest uppercase inline-block text-xs">
+                    Email [voiflo.community@gmail.com]
+                </a>
+                <a href="https://www.tiktok.com/@christine_voiflo" class="bg-white text-black border-2 border-black px-8 py-4 rounded-full font-bold hover:bg-gray-50 transition shadow-xl tracking-widest uppercase inline-block text-xs">
+                    TikTok [@christine_voiflo]
+                </a>
+            </div>
+            <div class="mt-10 pt-10 border-t border-gray-100 flex items-center justify-center gap-2">
+                <span class="font-bold tracking-[0.2em] text-sm text-gray-400">VOIFLO</span>
+                <span class="text-gray-300 mx-2">|</span>
+                <span class="text-xs text-gray-400 uppercase font-semibold text-[#FF0050]">Found & Managed by Creators</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
